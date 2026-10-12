@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formación IA Copilot Diseño de Experiencia</title>
+<style>
+:root{
+  --ink:#1d2430; --ink2:#4b5563; --muted:#6b7280;
+  --line:#e6e8eb; --hair:#eef0f2; --soft:#f6f7f8;
+  --antes:#8e97a2; --despues:#00c389;
+  --m:#fdda24; --a:#00c389; --o:#9063cd; --al:#ff7f41; --f:#f5b6cd; --c:#59cbe8;
+}
+*{box-sizing:border-box}
+html{font-size:16px;color-scheme:light}
+html.proj{font-size:19px}
+body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.45;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* encabezado */
+header.top{padding:34px 0 14px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.85rem;letter-spacing:.02em}
+.dots{display:flex;gap:4px}.dots i{width:10px;height:10px;border-radius:50%;display:block}
+h1{font-size:2rem;margin:10px 0 4px;font-weight:650;letter-spacing:-.015em;line-height:1.15}
+.sub0{color:var(--ink2);margin:0;font-size:.95rem}
+.printstate{display:none;color:var(--muted);font-size:.85rem;margin-top:6px}
+
+/* barra fija: pestañas + filtros */
+.bar-sticky{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tab{appearance:none;background:none;border:0;padding:12px 14px 10px;color:var(--ink2);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.tab .dot{width:9px;height:9px;border-radius:50%;background:var(--tc)}
+.tab[aria-selected=true]{color:var(--ink);font-weight:600;border-bottom-color:var(--tc)}
+.tab:hover{color:var(--ink)}
+.controls{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;padding:8px 0 10px}
+.ctl{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted)}
+.ctl.off{opacity:.4}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--soft)}
+.seg button{border:0;background:transparent;font-size:.85rem;padding:5px 12px;border-radius:999px;cursor:pointer;color:var(--ink2);white-space:nowrap}
+.seg button[aria-pressed=true]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 0 0 1px var(--line)}
+.ctl .pbtn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;font-size:.85rem;color:var(--ink2);cursor:pointer}
+.ctl .pbtn[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ctl .hint{color:var(--muted)}
+
+/* paneles */
+.panel{display:none;padding:28px 0 48px}
+.panel.on{display:block}
+h2{font-size:1.5rem;margin:0 0 4px;font-weight:650;letter-spacing:-.01em}
+.lead{color:var(--ink2);margin:0 0 20px;max-width:72ch}
+h3.sec{font-size:1.05rem;margin:32px 0 4px;font-weight:650}
+p.secsub{margin:0 0 14px;color:var(--muted);font-size:.88rem;max-width:80ch}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.span2{grid-column:1/-1}
+@media (max-width:980px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:820px){.g2,.g3,.g4{grid-template-columns:1fr}.wrap{padding:0 16px}h1{font-size:1.6rem}}
+
+/* tarjetas */
+.card{border:1px solid var(--line);border-radius:12px;padding:18px 20px;background:#fff;break-inside:avoid;min-width:0}
+.card header{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+.card h3{font-size:1rem;margin:0;font-weight:600;line-height:1.3}
+.card .sub{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+.legend{display:flex;gap:6px 14px;font-size:.78rem;color:var(--ink2);flex-wrap:wrap;justify-content:flex-end}
+.legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.sw.antes{background:var(--antes)}.sw.desp{background:var(--despues)}
+.chips{display:flex;flex-wrap:wrap;gap:6px 10px;margin:0 0 8px}
+.pill{font-size:.8rem;color:var(--ink2);background:var(--soft);border-radius:999px;padding:3px 10px}
+.pill b{color:var(--ink);font-weight:650}
+.cardfoot{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-top:10px;padding-top:10px;border-top:1px solid var(--hair)}
+.note{margin:0;color:var(--muted);font-size:.78rem}
+.note+.note{margin-top:3px}
+.tbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;font-size:.78rem;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.tbtn:hover{background:var(--soft)}
+
+/* filas de barras */
+.chart{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(110px,36%) 1fr;gap:14px;align-items:center;padding:6px;border-radius:8px;outline-offset:-2px}
+.row.has-extra{grid-template-columns:minmax(110px,34%) 1fr 70px}
+.row:hover,.row:focus-visible{background:var(--soft)}
+.lab span{display:block;font-size:.9rem;line-height:1.25}
+.lab small{display:block;color:var(--muted);font-size:.76rem;line-height:1.25;margin-top:1px}
+.bars{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bl{display:flex;align-items:center;gap:8px;min-height:12px}
+.bar{display:block;height:11px;flex:none;width:calc((100% - 3.6rem) * var(--w,0));border-radius:0 4px 4px 0}
+.bar.antes{background:var(--antes)}
+.bar.desp{background:var(--despues)}
+.v{font-size:.78rem;color:var(--ink2);white-space:nowrap;line-height:1}
+.grphead{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:12px 6px 2px}
+.grphead:first-child{padding-top:2px}
+.xchip{font-size:.78rem;text-align:center;color:var(--ink2);background:var(--soft);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.xchip.flag{background:#fff;border:1px solid var(--ink2)}
+.xhead{display:grid;grid-template-columns:minmax(110px,34%) 1fr 70px;gap:14px;padding:0 6px 4px;font-size:.74rem;color:var(--muted)}
+.xhead span:last-child{text-align:center}
+
+/* tabla gemela */
+table.tv{width:100%;border-collapse:collapse;font-size:.85rem}
+.tv caption{text-align:left;color:var(--muted);font-size:.78rem;padding-bottom:6px}
+.tv th{font-weight:600;color:var(--ink2);text-align:right;border-bottom:1px solid var(--line);padding:6px 8px}
+.tv td{padding:6px 8px;border-bottom:1px solid var(--hair);text-align:right;font-variant-numeric:tabular-nums}
+.tv th:first-child,.tv td:first-child{text-align:left}
+
+/* tiles */
+.tile{border:1px solid var(--line);border-top:3px solid var(--tc);border-radius:12px;padding:16px 18px 14px;background:#fff;break-inside:avoid;min-width:0}
+.tile .lab2{color:var(--ink2);font-size:.85rem;line-height:1.3}
+.tile .big{font-size:2.1rem;font-weight:650;letter-spacing:-.02em;margin:8px 0 4px;line-height:1.1}
+.tile .big .arrow{color:var(--muted);font-weight:400;margin:0 .15em}
+.tile .small{color:var(--muted);font-size:.82rem;line-height:1.35}
+.tile .two{margin-top:8px;display:grid;gap:5px;font-size:.88rem;line-height:1.3}
+.tile .two b{font-weight:650}
+.tile .two .tg{display:inline-block;min-width:5.2em;color:var(--muted);font-size:.78rem}
+
+/* listas de lectura */
+h3.sec + ul.read{margin-top:10px}
+ul.read{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+ul.read li{padding-left:18px;position:relative;max-width:80ch}
+ul.read li:before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:50%;background:var(--bc,var(--ink2))}
+.how{background:var(--soft);border-radius:12px;padding:18px 22px}
+.how h3{margin:0 0 10px;font-size:1rem}
+.banner{border:1px solid var(--line);border-left:4px solid var(--al);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 18px;font-size:.9rem;color:var(--ink2);background:#fff}
+
+/* citas */
+.quote{margin:0;padding:14px 18px;background:var(--soft);border-left:4px solid var(--qc);border-radius:0 12px 12px 0;break-inside:avoid}
+.quote p{margin:0 0 8px;font-size:.95rem;line-height:1.5}
+.quote .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.76rem;color:var(--muted)}
+.quote .tag{background:#fff;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--ink2)}
+
+/* próximos pasos */
+.step{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff;break-inside:avoid}
+.step .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--sc);color:var(--ink);font-size:.78rem;font-weight:650;margin-right:8px}
+.step h4{margin:0 0 8px;font-size:.98rem;font-weight:600;display:flex;align-items:center}
+.step p{margin:0 0 8px;font-size:.88rem;color:var(--ink2)}
+.step p b{color:var(--ink);font-weight:650}
+
+footer.page{margin-top:36px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.78rem}
+footer.page p{margin:0 0 4px}
+
+/* tooltip */
+#tip{position:fixed;z-index:50;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;box-shadow:0 6px 24px rgba(20,28,40,.12);font-size:.82rem;max-width:320px;opacity:0;transition:opacity .08s;left:0;top:0}
+#tip.on{opacity:1}
+#tip .tt{font-weight:600;margin-bottom:5px;line-height:1.3}
+#tip .tr{display:flex;align-items:center;gap:8px;margin-top:3px}
+#tip .tk{width:14px;height:3px;border-radius:2px;flex:none}
+#tip .tvv{font-weight:650}
+#tip .tn{color:var(--muted)}
+
+@media print{
+  html,html.proj{font-size:12.5px}
+  .bar-sticky,.tbtn,#tip,noscript{display:none!important}
+  .printstate{display:block}
+  header.top{padding-top:0}
+  .panel{display:block!important;padding:16px 0 0;break-before:page}
+  .panel:first-of-type{break-before:auto}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bar.antes,.sw.antes{background:repeating-linear-gradient(135deg,var(--antes) 0 3px,#fff 3px 5px)}
+  .row:hover{background:none}
+}
+@media (forced-colors:active){
+  .bar.antes,.sw.antes{background:repeating-linear-gradient(135deg,CanvasText 0 3px,Canvas 3px 5px)}
+  .bar.desp,.sw.desp{background:CanvasText}
+}
+@media (max-width:520px){.seg button{padding:5px 8px;font-size:.8rem}.ctl{flex-wrap:wrap}.seg{max-width:100%}}
+@media (prefers-reduced-motion:reduce){#tip{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="dots" aria-hidden="true"><i style="background:var(--m)"></i><i style="background:var(--a)"></i><i style="background:var(--o)"></i><i style="background:var(--al)"></i><i style="background:var(--f)"></i><i style="background:var(--c)"></i></span><span>Learning Time</span></div>
+    <h1>Formación IA Copilot Diseño de Experiencia</h1>
+    <p class="sub0">Resultados de las encuestas antes y después de la formación · tablero generado el 11 de octubre de 2026</p>
+    <p class="printstate" id="printstate"></p>
+  </header>
+</div>
+<div class="bar-sticky">
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Secciones del tablero" id="tabs"></div>
+    <div class="controls" id="controls"></div>
+  </div>
+</div>
+<main class="wrap" id="panels"><noscript>Este tablero necesita JavaScript activado para mostrar los gráficos.</noscript></main>
+<div class="wrap"><footer class="page">
+  <p>Fuente: reportes de Microsoft Forms de la encuesta inicial (58 registros) y de las dos versiones de la encuesta final (14 y 23 respuestas). Datos organizados en Datos_Encuestas_IA_Experiencia.xlsx.</p>
+  <p>Las respuestas abiertas se clasificaron por tema con lectura manual; una respuesta puede tener varios temas. Los comentarios citados son literales y no incluyen nombres.</p>
+  <p>La asistencia de la versión A (14 personas que asistieron a las 4 sesiones) la informó la facilitadora; no viene de los reportes de Forms.</p>
+  <p>Atajos: ← → cambian de pestaña · 1 a 5 saltan a una pestaña · P activa el modo proyección.</p>
+</footer></div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const D = {"dims":{"Sentimiento":[{"o":"Entusiasmada/o","g":null,"v":null,"antes":20,"a":9,"b":8},{"o":"Optimista","g":null,"v":null,"antes":4,"a":2,"b":4},{"o":"Curiosa/o","g":null,"v":null,"antes":32,"a":3,"b":11},{"o":"Neutral / Expectante","g":null,"v":null,"antes":2,"a":0,"b":0},{"o":"Preocupada/o","g":null,"v":null,"antes":0,"a":0,"b":0},{"o":"Temerosa/o","g":null,"v":null,"antes":0,"a":0,"b":0},{"o":"Escéptica/a","g":null,"v":null,"antes":0,"a":0,"b":0},{"o":"Ninguna de las anteriores","g":null,"v":null,"antes":0,"a":0,"b":0}],"Nivel":[{"o":"Novato","g":null,"v":1,"antes":0,"a":1,"b":0},{"o":"Curioso","g":null,"v":2,"antes":52,"a":8,"b":15},{"o":"Estratega","g":null,"v":3,"antes":6,"a":4,"b":8},{"o":"Maestro","g":null,"v":4,"antes":0,"a":1,"b":0},{"o":"Sensei","g":null,"v":5,"antes":0,"a":0,"b":0}],"Prompts (1-5)":[{"o":"Nivel 1","g":null,"v":1,"antes":0,"a":1,"b":0},{"o":"Nivel 2","g":null,"v":2,"antes":9,"a":1,"b":0},{"o":"Nivel 3","g":null,"v":3,"antes":32,"a":3,"b":6},{"o":"Nivel 4","g":null,"v":4,"antes":14,"a":7,"b":15},{"o":"Nivel 5","g":null,"v":5,"antes":3,"a":2,"b":2}],"Claridad":[{"o":"Muy claro","g":null,"v":5,"antes":12,"a":6,"b":8},{"o":"Bastante claro","g":null,"v":4,"antes":14,"a":7,"b":15},{"o":"Moderadamente claro","g":null,"v":3,"antes":32,"a":1,"b":0},{"o":"Poco claro","g":null,"v":2,"antes":0,"a":0,"b":0},{"o":"Nada claro","g":null,"v":1,"antes":0,"a":0,"b":0}],"Tareas IA":[{"o":"Scanear","g":null,"v":null,"antes":28,"a":5,"b":6},{"o":"Analizar","g":null,"v":null,"antes":35,"a":6,"b":14},{"o":"Visionar","g":null,"v":null,"antes":24,"a":8,"b":9},{"o":"Refinar","g":null,"v":null,"antes":12,"a":6,"b":6},{"o":"Prototipar","g":null,"v":null,"antes":15,"a":2,"b":9},{"o":"Otras","g":null,"v":null,"antes":1,"a":1,"b":1}],"Preocupaciones":[{"o":"Reemplazo laboral","g":null,"v":null,"antes":6,"a":0,"b":1},{"o":"Falta de conocimientos para usarla","g":null,"v":null,"antes":11,"a":1,"b":0},{"o":"No sé en qué usar la IA","g":null,"v":null,"antes":4,"a":0,"b":0},{"o":"Falta de tiempo para experimentar","g":null,"v":null,"antes":9,"a":7,"b":4},{"o":"Pérdida de habilidades por dependencia","g":null,"v":null,"antes":3,"a":0,"b":3},{"o":"Errores por confiar en los resultados","g":null,"v":null,"antes":4,"a":1,"b":5},{"o":"Privacidad y seguridad de los datos","g":null,"v":null,"antes":7,"a":2,"b":3},{"o":"Aspectos éticos","g":null,"v":null,"antes":2,"a":0,"b":0},{"o":"La IA avanza muy rápido","g":null,"v":null,"antes":12,"a":3,"b":7},{"o":"Nada me preocupa","g":null,"v":null,"antes":0,"a":0,"b":0},{"o":"Otras","g":null,"v":null,"antes":0,"a":0,"b":0}],"Preparación E2E (1-5)":[{"o":"Nivel 1","g":null,"v":1,"antes":4,"a":0,"b":0},{"o":"Nivel 2","g":null,"v":2,"antes":15,"a":1,"b":3},{"o":"Nivel 3","g":null,"v":3,"antes":27,"a":5,"b":9},{"o":"Nivel 4","g":null,"v":4,"antes":7,"a":7,"b":10},{"o":"Nivel 5","g":null,"v":5,"antes":5,"a":1,"b":1}],"Equipo":[{"o":"Línea Negocios 1","g":"Línea Negocios","v":null,"antes":0,"a":0,"b":0},{"o":"Línea Negocios 2","g":"Línea Negocios","v":null,"antes":7,"a":1,"b":4},{"o":"Línea Negocios 3","g":"Línea Negocios","v":null,"antes":5,"a":2,"b":2},{"o":"Línea Negocios 4","g":"Línea Negocios","v":null,"antes":6,"a":4,"b":2},{"o":"Línea Negocios 5","g":"Línea Negocios","v":null,"antes":2,"a":1,"b":0},{"o":"Línea Personas 1","g":"Línea Personas","v":null,"antes":1,"a":1,"b":0},{"o":"Línea Personas 2","g":"Línea Personas","v":null,"antes":5,"a":2,"b":0},{"o":"Línea Personas 3","g":"Línea Personas","v":null,"antes":2,"a":0,"b":0},{"o":"Línea Personas 4","g":"Línea Personas","v":null,"antes":4,"a":0,"b":3},{"o":"Línea Personas 5","g":"Línea Personas","v":null,"antes":1,"a":0,"b":1},{"o":"Línea Digital 1","g":"Línea Digital","v":null,"antes":10,"a":2,"b":4},{"o":"Línea Digital 2","g":"Línea Digital","v":null,"antes":1,"a":0,"b":2},{"o":"Línea Digital 3","g":"Línea Digital","v":null,"antes":2,"a":0,"b":1},{"o":"Línea Digital 4","g":"Línea Digital","v":null,"antes":4,"a":1,"b":1},{"o":"Evolución de la Práctica","g":"Evolución de la Práctica","v":null,"antes":3,"a":0,"b":1},{"o":"Equipo Operación","g":"Equipo Operación","v":null,"antes":2,"a":0,"b":1},{"o":"Otras","g":"Otras","v":null,"antes":3,"a":0,"b":1}],"Rol":[{"o":"Diseñador de Experiencia","g":null,"v":null,"antes":49,"a":14,"b":19},{"o":"Líder de Área o Líder de Línea","g":null,"v":null,"antes":6,"a":0,"b":2},{"o":"Integrante de Evolución de la Práctica","g":null,"v":null,"antes":2,"a":0,"b":1},{"o":"Integrante de Operación","g":null,"v":null,"antes":1,"a":0,"b":1},{"o":"Otras","g":null,"v":null,"antes":0,"a":0,"b":0}]},"asistencia":[{"o":"Todas las 4 sesiones","v":4,"a":14,"b":2},{"o":"3 de las 4 sesiones","v":3,"a":0,"b":12},{"o":"2 de las 4 sesiones","v":2,"a":0,"b":9},{"o":"1 de las 4 sesiones","v":1,"a":0,"b":0},{"o":"Ninguna sesión","v":0,"a":0,"b":0},{"o":"Otras","v":null,"a":0,"b":0}],"n":{"antes":58,"a":14,"b":23},"personas":{"unicas":53,"duplicados":5,"conResp":37},"cat":{"EX01":"Aplicación práctica y día a día","EX02":"Sacar provecho y optimizar el trabajo","EX03":"Aprender y ampliar conocimiento","EX04":"Prompts, técnicas y buenas prácticas","EX05":"Herramientas y funcionalidades","EX06":"IA en el proceso de diseño","EX07":"Proyectos E2E, frameworks y metodología","EX08":"Fundamentos, nivelación y teoría","EX09":"Confianza y seguridad personal","EX10":"Automatización, agentes y datos","EX11":"Uso estratégico","EX12":"Comunidad y conexiones","L00":"Valoración general positiva (sin detalle)","L01":"Facilitadora: experticia y calidad humana","L02":"Didáctica: claridad, paso a paso y ejemplos","L03":"Equilibrio entre teoría y práctica","L04":"Profundidad del contenido y el porqué","L05":"Prompting y marcos de trabajo","L06":"Aplicabilidad al trabajo y al día a día","L07":"Cambio de perspectiva y motivación","L08":"Clima de aprendizaje y participación","M00":"Sin aspectos negativos explícitos","M01":"Horario (viernes en la tarde, cansancio)","M02":"Formalizar: jornada laboral, no voluntario, para todos","M03":"Quieren más: continuidad, sesiones o duración","M04":"Sesiones muy extensas o agotadoras","M05":"Falta de grabación o acceso a ella","M06":"Más práctica aplicada, proyectos reales o profundidad","M07":"Expectativa inicial distinta (esperaba enfoque Figma)","B01":"Compromisos personales o familiares","B02":"Salud (propia o de un familiar)","B03":"Viaje o vacaciones","B04":"Horario, viernes en la tarde o fuera de jornada","B05":"Prioridades o entregables de trabajo","B06":"Falta de tiempo o logística (sin detalle)","B07":"Imprevisto externo","B08":"Sin barreras (asistió a todas)"},"expectativas":[["Aprender y ampliar conocimiento","Sacar provecho y optimizar el trabajo"],["Aplicación práctica y día a día","Proyectos E2E, frameworks y metodología"],["Aplicación práctica y día a día","Aprender y ampliar conocimiento","Uso estratégico"],["Aprender y ampliar conocimiento"],["Aplicación práctica y día a día"],["Aplicación práctica y día a día","Herramientas y funcionalidades"],["Aplicación práctica y día a día","Sacar provecho y optimizar el trabajo"],["Prompts, técnicas y buenas prácticas","Sacar provecho y optimizar el trabajo"],["IA en el proceso de diseño"],["Aprender y ampliar conocimiento"],["Herramientas y funcionalidades","Prompts, técnicas y buenas prácticas","Aplicación práctica y día a día"],["Proyectos E2E, frameworks y metodología"],["Herramientas y funcionalidades","Automatización, agentes y datos","Sacar provecho y optimizar el trabajo"],["Fundamentos, nivelación y teoría","Proyectos E2E, frameworks y metodología"],["Aplicación práctica y día a día"],["Aprender y ampliar conocimiento"],["Herramientas y funcionalidades","Aplicación práctica y día a día","Sacar provecho y optimizar el trabajo"],["Confianza y seguridad personal"],["Herramientas y funcionalidades","Aplicación práctica y día a día"],["IA en el proceso de diseño"],["Fundamentos, nivelación y teoría","Aprender y ampliar conocimiento"],["Herramientas y funcionalidades","Sacar provecho y optimizar el trabajo"],["Fundamentos, nivelación y teoría"],["Aplicación práctica y día a día","Fundamentos, nivelación y teoría","IA en el proceso de diseño"],["IA en el proceso de diseño"],["Aprender y ampliar conocimiento"],["Proyectos E2E, frameworks y metodología"],["Confianza y seguridad personal"],["Prompts, técnicas y buenas prácticas","Aprender y ampliar conocimiento"],["Fundamentos, nivelación y teoría","Aplicación práctica y día a día","Sacar provecho y optimizar el trabajo"],["Automatización, agentes y datos","Sacar provecho y optimizar el trabajo"],["Aprender y ampliar conocimiento"],["Aplicación práctica y día a día","IA en el proceso de diseño"],["Proyectos E2E, frameworks y metodología"],["Aprender y ampliar conocimiento"],["Aprender y ampliar conocimiento"],["Proyectos E2E, frameworks y metodología","Sacar provecho y optimizar el trabajo"],["Aprender y ampliar conocimiento","Aplicación práctica y día a día"],["Uso estratégico","Herramientas y funcionalidades"],["Aprender y ampliar conocimiento","Sacar provecho y optimizar el trabajo"],["Aplicación práctica y día a día"],["IA en el proceso de diseño"],["Aprender y ampliar conocimiento","Aplicación práctica y día a día"],["Aplicación práctica y día a día"],["Aprender y ampliar conocimiento"],["Herramientas y funcionalidades","Sacar provecho y optimizar el trabajo"],["IA en el proceso de diseño","Sacar provecho y optimizar el trabajo"],["Aprender y ampliar conocimiento","Comunidad y conexiones"],["IA en el proceso de diseño","Aprender y ampliar conocimiento"],["Aplicación práctica y día a día","Sacar provecho y optimizar el trabajo"],["Aplicación práctica y día a día","Sacar provecho y optimizar el trabajo","Uso estratégico"],["Aprender y ampliar conocimiento"],["Herramientas y funcionalidades","Sacar provecho y optimizar el trabajo"],["Sacar provecho y optimizar el trabajo"],["Prompts, técnicas y buenas prácticas","Herramientas y funcionalidades","Aplicación práctica y día a día"],["Aprender y ampliar conocimiento","Sacar provecho y optimizar el trabajo"],["Herramientas y funcionalidades","Fundamentos, nivelación y teoría"],["Aprender y ampliar conocimiento","Aplicación práctica y día a día","Comunidad y conexiones"]],"barreras":[{"t":["Falta de tiempo o logística (sin detalle)"],"s":[],"rv":false,"rf":false},{"t":["Viaje o vacaciones","Compromisos personales o familiares"],"s":[1,4],"rv":false,"rf":false},{"t":["Viaje o vacaciones","Compromisos personales o familiares"],"s":[4],"rv":false,"rf":false},{"t":["Sin barreras (asistió a todas)"],"s":[],"rv":false,"rf":false},{"t":["Salud (propia o de un familiar)"],"s":[3],"rv":true,"rf":false},{"t":["Salud (propia o de un familiar)","Prioridades o entregables de trabajo"],"s":[],"rv":false,"rf":false},{"t":["Salud (propia o de un familiar)","Compromisos personales o familiares","Horario, viernes en la tarde o fuera de jornada"],"s":[],"rv":true,"rf":false},{"t":["Compromisos personales o familiares"],"s":[4],"rv":false,"rf":false},{"t":["Falta de tiempo o logística (sin detalle)","Horario, viernes en la tarde o fuera de jornada"],"s":[],"rv":false,"rf":false},{"t":["Horario, viernes en la tarde o fuera de jornada"],"s":[],"rv":false,"rf":false},{"t":["Compromisos personales o familiares"],"s":[3,4],"rv":false,"rf":false},{"t":["Horario, viernes en la tarde o fuera de jornada"],"s":[],"rv":true,"rf":true},{"t":["Viaje o vacaciones"],"s":[],"rv":true,"rf":false},{"t":["Imprevisto externo","Compromisos personales o familiares"],"s":[],"rv":false,"rf":true},{"t":["Falta de tiempo o logística (sin detalle)"],"s":[4],"rv":true,"rf":false},{"t":["Sin barreras (asistió a todas)"],"s":[],"rv":false,"rf":false},{"t":["Horario, viernes en la tarde o fuera de jornada"],"s":[],"rv":false,"rf":false},{"t":["Compromisos personales o familiares"],"s":[],"rv":false,"rf":false},{"t":["Compromisos personales o familiares"],"s":[4],"rv":false,"rf":false},{"t":["Compromisos personales o familiares"],"s":[],"rv":false,"rf":false},{"t":["Compromisos personales o familiares"],"s":[],"rv":false,"rf":false},{"t":["Falta de tiempo o logística (sin detalle)","Compromisos personales o familiares"],"s":[],"rv":false,"rf":false},{"t":["Salud (propia o de un familiar)"],"s":[],"rv":true,"rf":false}],"feedback":[{"ver":"A","g":["Profundidad del contenido y el porqué"],"m":["Horario (viernes en la tarde, cansancio)"]},{"ver":"A","g":["Profundidad del contenido y el porqué","Equilibrio entre teoría y práctica"],"m":["Sin aspectos negativos explícitos"]},{"ver":"A","g":["Cambio de perspectiva y motivación"],"m":["Más práctica aplicada, proyectos reales o profundidad"]},{"ver":"A","g":["Profundidad del contenido y el porqué","Facilitadora: experticia y calidad humana"],"m":["Quieren más: continuidad, sesiones o duración"]},{"ver":"A","g":["Didáctica: claridad, paso a paso y ejemplos","Facilitadora: experticia y calidad humana"],"m":["Sin aspectos negativos explícitos"]},{"ver":"A","g":["Equilibrio entre teoría y práctica","Prompting y marcos de trabajo","Cambio de perspectiva y motivación","Profundidad del contenido y el porqué"],"m":["Sin aspectos negativos explícitos"]},{"ver":"A","g":["Valoración general positiva (sin detalle)"],"m":["Horario (viernes en la tarde, cansancio)","Más práctica aplicada, proyectos reales o profundidad"]},{"ver":"A","g":["Profundidad del contenido y el porqué","Facilitadora: experticia y calidad humana","Cambio de perspectiva y motivación","Clima de aprendizaje y participación"],"m":["Quieren más: continuidad, sesiones o duración"]},{"ver":"A","g":["Prompting y marcos de trabajo"],"m":["Sin aspectos negativos explícitos"]},{"ver":"A","g":["Didáctica: claridad, paso a paso y ejemplos","Cambio de perspectiva y motivación"],"m":["Sin aspectos negativos explícitos"]},{"ver":"A","g":["Cambio de perspectiva y motivación","Didáctica: claridad, paso a paso y ejemplos"],"m":["Sin aspectos negativos explícitos"]},{"ver":"A","g":["Equilibrio entre teoría y práctica","Profundidad del contenido y el porqué","Didáctica: claridad, paso a paso y ejemplos","Cambio de perspectiva y motivación"],"m":["Más práctica aplicada, proyectos reales o profundidad"]},{"ver":"A","g":["Facilitadora: experticia y calidad humana","Clima de aprendizaje y participación"],"m":["Sin aspectos negativos explícitos"]},{"ver":"A","g":["Profundidad del contenido y el porqué","Cambio de perspectiva y motivación","Didáctica: claridad, paso a paso y ejemplos","Aplicabilidad al trabajo y al día a día"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Equilibrio entre teoría y práctica","Clima de aprendizaje y participación","Facilitadora: experticia y calidad humana"],"m":["Horario (viernes en la tarde, cansancio)","Formalizar: jornada laboral, no voluntario, para todos","Quieren más: continuidad, sesiones o duración"]},{"ver":"B","g":["Prompting y marcos de trabajo","Equilibrio entre teoría y práctica","Aplicabilidad al trabajo y al día a día"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Profundidad del contenido y el porqué","Clima de aprendizaje y participación"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Profundidad del contenido y el porqué","Clima de aprendizaje y participación","Equilibrio entre teoría y práctica"],"m":["Horario (viernes en la tarde, cansancio)","Formalizar: jornada laboral, no voluntario, para todos"]},{"ver":"B","g":["Profundidad del contenido y el porqué","Facilitadora: experticia y calidad humana","Prompting y marcos de trabajo"],"m":["Quieren más: continuidad, sesiones o duración"]},{"ver":"B","g":["Facilitadora: experticia y calidad humana","Equilibrio entre teoría y práctica"],"m":["Sesiones muy extensas o agotadoras"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Profundidad del contenido y el porqué","Prompting y marcos de trabajo"],"m":["Horario (viernes en la tarde, cansancio)","Formalizar: jornada laboral, no voluntario, para todos"]},{"ver":"B","g":["Profundidad del contenido y el porqué","Didáctica: claridad, paso a paso y ejemplos"],"m":["Más práctica aplicada, proyectos reales o profundidad"]},{"ver":"B","g":["Cambio de perspectiva y motivación","Aplicabilidad al trabajo y al día a día","Facilitadora: experticia y calidad humana"],"m":["Quieren más: continuidad, sesiones o duración"]},{"ver":"B","g":["Facilitadora: experticia y calidad humana","Equilibrio entre teoría y práctica"],"m":["Formalizar: jornada laboral, no voluntario, para todos"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Aplicabilidad al trabajo y al día a día"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Cambio de perspectiva y motivación"],"m":["Horario (viernes en la tarde, cansancio)","Falta de grabación o acceso a ella"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Facilitadora: experticia y calidad humana"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos"],"m":["Falta de grabación o acceso a ella"]},{"ver":"B","g":["Cambio de perspectiva y motivación","Didáctica: claridad, paso a paso y ejemplos"],"m":["Sesiones muy extensas o agotadoras"]},{"ver":"B","g":["Aplicabilidad al trabajo y al día a día","Clima de aprendizaje y participación"],"m":["Quieren más: continuidad, sesiones o duración"]},{"ver":"B","g":["Profundidad del contenido y el porqué","Equilibrio entre teoría y práctica","Didáctica: claridad, paso a paso y ejemplos"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Prompting y marcos de trabajo"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Equilibrio entre teoría y práctica","Cambio de perspectiva y motivación"],"m":["Expectativa inicial distinta (esperaba enfoque Figma)"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Profundidad del contenido y el porqué"],"m":["Horario (viernes en la tarde, cansancio)"]},{"ver":"B","g":["Facilitadora: experticia y calidad humana"],"m":["Formalizar: jornada laboral, no voluntario, para todos"]},{"ver":"B","g":["Profundidad del contenido y el porqué","Equilibrio entre teoría y práctica","Didáctica: claridad, paso a paso y ejemplos","Facilitadora: experticia y calidad humana"],"m":["Sin aspectos negativos explícitos"]},{"ver":"B","g":["Didáctica: claridad, paso a paso y ejemplos","Aplicabilidad al trabajo y al día a día","Profundidad del contenido y el porqué","Cambio de perspectiva y motivación"],"m":["Quieren más: continuidad, sesiones o duración","Más práctica aplicada, proyectos reales o profundidad"]}],"quotes":[{"text":"Me encanto la forma de explicar, siento que fue con plastilina. Me gusto los temas, el entender el por qué, para qué, y no solo el cómo.","ver":"B","kind":"gusto","tags":["Didáctica: claridad, paso a paso y ejemplos","Profundidad del contenido y el porqué"]},{"text":"Ninguna sesión se hizo larga ni pesada; se sintió genuinamente como un espacio seguro para aprender.","ver":"B","kind":"gusto","tags":["Clima de aprendizaje y participación"]},{"text":"Subí el nivel con el uso de la IA en gran proporción, se abre mi horizonte para comenzar a explorar","ver":"A","kind":"gusto","tags":["Cambio de perspectiva y motivación"]},{"text":"Me llevo varios conocimientos y herramientas que definitivamente puedo aplicar en mi día a día.","ver":"B","kind":"gusto","tags":["Aplicabilidad al trabajo y al día a día"]},{"text":"tal vez debería de ser un curso como los de evolución de la practica que se encuentre en el horario laboral y que no sea voluntario, fue muy bueno y todos deberían de hacerlo","ver":"B","kind":"mejora","tags":["Horario (viernes en la tarde, cansancio)","Formalizar: jornada laboral, no voluntario, para todos"]},{"text":"hubiese sido más interesante y util el poder tomar un proyecto eprsonal y crear los prompts desde cero, claro con lineamientos.","ver":"B","kind":"mejora","tags":["Más práctica aplicada, proyectos reales o profundidad"]},{"text":"Lo que menos me gustó el no tener acceso a algun tipo de memoria o grabación del espacio ( debido a que no puede estar en 2 ) me perdí gran parte de la información","ver":"B","kind":"mejora","tags":["Falta de grabación o acceso a ella"]},{"text":"sería interesante crear un grupo que genere retos semanales desde el nivel 1 hasta el más avanzado me ayudaría a retarme más","ver":"B","kind":"mejora","tags":["Quieren más: continuidad, sesiones o duración","Más práctica aplicada, proyectos reales o profundidad"]}]};
+
+/* ---------- estado ---------- */
+const S = {tab:'resumen', unit:'pct', vers:'total', proj:false, tables:{}};
+const TABS = [
+  {id:'resumen',    label:'Resumen',               color:'var(--m)'},
+  {id:'cambio',     label:'Antes vs. después',     color:'var(--a)'},
+  {id:'asistencia', label:'Asistencia y barreras', color:'var(--al)'},
+  {id:'perfil',     label:'Perfil y cobertura',    color:'var(--c)'},
+  {id:'voz',        label:'Voz y próximos pasos',  color:'var(--o)'}
+];
+const NB = {antes:D.n.antes, a:D.n.a, b:D.n.b, total:D.n.a + D.n.b};
+const VERS_LABEL = {total:'Total', a:'Versión A', b:'Versión B'};
+
+/* ---------- utilidades ---------- */
+function h(tag, props, ...kids){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(props || {})){
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k === 'style') for (const [sk,sv] of Object.entries(v)) e.style.setProperty(sk, sv);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat(Infinity)){
+    if (c == null || c === false) continue;
+    e.append(c.nodeType ? c : document.createTextNode(String(c)));
+  }
+  return e;
+}
+const nf  = (x, d=0) => x.toLocaleString('es-CO', {minimumFractionDigits:d, maximumFractionDigits:d});
+const pct = (x, d=1) => nf(x*100, d) + '%';
+const sgn = (x, d=2) => (x > 0 ? '+' : x < 0 ? '−' : '') + nf(Math.abs(x), d);
+const nDesp = () => NB[S.vers];
+const dCount = o => S.vers === 'total' ? o.a + o.b : o[S.vers];
+const versTag = () => S.vers === 'total' ? 'total, ' + NB.total + ' respuestas' : VERS_LABEL[S.vers].replace('Versión','versión') + ', ' + nDesp() + ' respuestas';
+
+function rowsOf(name){
+  return D.dims[name].map(o => ({label:o.o, grp:o.g, v:o.v, antes:o.antes, desp:dCount(o)}));
+}
+function avgOf(name, which){
+  let s = 0, n = 0;
+  rowsOf(name).forEach(r => { if (r.v != null){ s += r.v * r[which]; n += r[which]; } });
+  return s / n;
+}
+function topShare(name, which, thr){
+  let t = 0, n = 0;
+  rowsOf(name).forEach(r => { n += r[which]; if (r.v != null && r.v >= thr) t += r[which]; });
+  return t / n;
+}
+function shareOf(name, label, which){
+  const base = which === 'antes' ? NB.antes : nDesp();
+  const r = rowsOf(name).find(x => x.label === label);
+  return r[which] / base;
+}
+function sumShare(name, labels, which){
+  const base = which === 'antes' ? NB.antes : nDesp();
+  return rowsOf(name).filter(r => labels.includes(r.label)).reduce((s, r) => s + r[which], 0) / base;
+}
+function topConcern(which){
+  const rows = rowsOf('Preocupaciones');
+  const max = Math.max(...rows.map(r => r[which]));
+  const tops = rows.filter(r => r[which] === max);
+  const base = which === 'antes' ? NB.antes : nDesp();
+  return {label:tops[0].label, n:max, share:max/base, ties:tops.length};
+}
+const LAB = {
+  'Prompts (1-5)': {'Nivel 1':'1 · No sé escribir prompts','Nivel 2':'2','Nivel 3':'3','Nivel 4':'4','Nivel 5':'5 · Soy un sensei escribiendo prompts'},
+  'Preparación E2E (1-5)': {'Nivel 1':'1 · Nada preparada/o','Nivel 2':'2','Nivel 3':'3','Nivel 4':'4','Nivel 5':'5 · Totalmente preparada/o'}
+};
+const HINT = {
+  'Nivel': {Novato:'apenas estoy iniciando', Curioso:'uso herramientas como Copilot y hago prompts', Estratega:'orquesto varias herramientas y asistentes tipo RAG', Maestro:'automatizo y conecto la IA con APIs', Sensei:'diseño agentes autónomos'},
+  'Tareas IA': {Scanear:'investigar, recopilar, resumir', Analizar:'datos, patrones, insights', Visionar:'ideación y conceptualización', Refinar:'optimizar y pulir lo ya hecho', Prototipar:'pilotos, mockups, simulaciones', Otras:'sin detalle en el reporte'}
+};
+function decorated(name, rows){
+  return rows.map(r => ({...r, label:(LAB[name] && LAB[name][r.label]) || r.label, hint:(HINT[name] && HINT[name][r.label]) || ''}));
+}
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById('tip');
+function showTip(data, x, y){
+  tip.replaceChildren(
+    h('div', {class:'tt', text:data.title}),
+    ...data.lines.map(l => h('div', {class:'tr'},
+      h('span', {class:'tk', style:{background:l.color}}),
+      h('span', {class:'tvv', text:l.value}),
+      h('span', {class:'tn', text:l.name})))
+  );
+  tip.classList.add('on');
+  const r = tip.getBoundingClientRect();
+  let left = x + 16, top = y + 16;
+  if (left + r.width > innerWidth - 8) left = x - r.width - 16;
+  if (top + r.height > innerHeight - 8) top = y - r.height - 16;
+  tip.style.left = Math.max(8, left) + 'px';
+  tip.style.top = Math.max(8, top) + 'px';
+}
+const hideTip = () => tip.classList.remove('on');
+
+/* ---------- tarjeta de barras ---------- */
+function barCard(cfg){
+  const series = cfg.series || ['antes','desp'];
+  const names = cfg.names || {antes:'Antes', desp:'Después'};
+  const colors = {antes:'var(--antes)', desp:'var(--despues)'};
+  const word = cfg.word || 'respuestas';
+  const unit = cfg.forceUnit || S.unit;
+  const frac = !!cfg.fractions;   // las filas ya traen proporciones (0 a 1)
+  const val = (n, base) => frac ? n : (unit === 'pct' ? n / base : n);
+  const fmt = (n, base) => frac ? pct(n) : (unit === 'pct' ? pct(n / base) : nf(n));
+  const detail = (r, s) => frac ? pct(r[s]) + ' de las ' + cfg.bases[s] + ' respuestas' : nf(r[s]) + ' de ' + cfg.bases[s] + ' · ' + pct(r[s] / cfg.bases[s]);
+  const data = cfg.rows.filter(r => !r.header);
+  const max = Math.max(1e-9, ...data.flatMap(r => series.map(s => val(r[s], cfg.bases[s]))));
+  const asTable = !!S.tables[cfg.id];
+  const hasExtra = cfg.rows.some(r => r.extra);
+
+  const legend = series.length > 1 ? h('div', {class:'legend'},
+    series.map(s => h('span', {}, h('i', {class:'sw ' + s}), names[s] + ' · n = ' + cfg.bases[s]))) : null;
+
+  let body;
+  if (!asTable){
+    const rowEls = [];
+    if (hasExtra) rowEls.push(h('div', {class:'xhead'}, h('span', {text:''}), h('span', {text:''}), h('span', {text:cfg.extraHead || ''})));
+    cfg.rows.forEach(r => {
+      if (r.header){ rowEls.push(h('div', {class:'grphead', text:r.header})); return; }
+      const lines = series.map(s => ({
+        color:colors[s], name:names[s],
+        value: detail(r, s)
+      }));
+      const aria = r.label + ': ' + series.map(s => names[s] + ' ' + detail(r, s)).join('; ');
+      const row = h('div', {class:'row' + (hasExtra ? ' has-extra' : ''), tabindex:'0', role:'group', 'aria-label':aria},
+        h('div', {class:'lab'}, h('span', {text:r.label}), r.hint ? h('small', {text:r.hint}) : null),
+        h('div', {class:'bars'}, series.map(s => h('div', {class:'bl'},
+          h('span', {class:'bar ' + s, style:{'--w':String(val(r[s], cfg.bases[s]) / max)}}),
+          h('span', {class:'v', text:fmt(r[s], cfg.bases[s])})))),
+        hasExtra ? h('span', {class:'xchip' + (r.flag ? ' flag' : ''), text:r.extra || '', title:r.extraTitle || ''}) : null);
+      const tdata = {title:r.label + (r.hint ? ' (' + r.hint + ')' : ''), lines:lines.concat(r.tipExtra ? [{color:'transparent', name:r.tipExtra, value:''}] : [])};
+      row.addEventListener('pointermove', e => showTip(tdata, e.clientX, e.clientY));
+      row.addEventListener('pointerleave', hideTip);
+      row.addEventListener('focus', () => { const b = row.getBoundingClientRect(); showTip(tdata, b.left + b.width/2, b.top + b.height/2); });
+      row.addEventListener('blur', hideTip);
+      rowEls.push(row);
+    });
+    body = h('div', {class:'chart'}, rowEls);
+  } else {
+    const head = [h('th', {text:cfg.tableLabel || 'Opción'})];
+    series.forEach(s => { if (!frac) head.push(h('th', {text:names[s] + ' (' + word + ')'})); head.push(h('th', {text:names[s] + ' (%)'})); });
+    if (hasExtra) head.push(h('th', {text:cfg.extraHead || ''}));
+    body = h('table', {class:'tv'},
+      h('caption', {text:'Tabla de datos · ' + cfg.title}),
+      h('thead', {}, h('tr', {}, head)),
+      h('tbody', {}, data.map(r => h('tr', {},
+        h('td', {text:(r.grp ? r.grp + ' · ' : '') + r.label}),
+        series.flatMap(s => frac ? [h('td', {text:pct(r[s])})] : [h('td', {text:nf(r[s])}), h('td', {text:pct(r[s] / cfg.bases[s])})]),
+        hasExtra ? h('td', {text:r.extra || ''}) : null))));
+  }
+
+  return h('article', {class:'card' + (cfg.wide ? ' span2' : ''), id:'card-' + cfg.id},
+    h('header', {}, h('div', {}, h('h3', {text:cfg.title}), cfg.sub ? h('p', {class:'sub', text:cfg.sub}) : null), legend),
+    cfg.chips && cfg.chips.length ? h('div', {class:'chips'}, cfg.chips.map(c => h('span', {class:'pill'}, c.name + ' ', h('b', {text:c.value})))) : null,
+    body,
+    h('div', {class:'cardfoot'},
+      h('div', {}, (cfg.notes || []).map(n => h('p', {class:'note', text:n}))),
+      h('button', {class:'tbtn', 'aria-pressed':String(asTable), text:asTable ? 'Ver gráfico' : 'Ver tabla',
+        onclick:() => { S.tables[cfg.id] = !S.tables[cfg.id]; render(); }})));
+}
+
+function tile(c){
+  return h('div', {class:'tile', style:{'--tc':c.color}},
+    h('div', {class:'lab2', text:c.label}),
+    c.big ? h('div', {class:'big'}, c.big) : null,
+    c.two ? h('div', {class:'two'}, c.two.map(t => h('div', {}, h('span', {class:'tg', text:t.tag}), h('b', {text:t.text}), t.after ? ' ' + t.after : ''))) : null,
+    c.small ? h('div', {class:'small', text:c.small}) : null);
+}
+const arrowBig = (a, b) => [a, h('span', {class:'arrow', text:'→'}), b];
+
+const baseNote = () => 'Base: Antes ' + NB.antes + ' registros · Después ' + nDesp() + ' respuestas (' + versTag().split(',')[0] + '). Son grupos distintos, no una comparación persona a persona.';
+
+/* ---------- datos de texto ---------- */
+const cat = D.cat;
+function fbMatch(r, field, names){ return r[field].some(t => names.includes(t)); }
+function fbRows(){ return D.feedback.filter(r => S.vers === 'total' || r.ver.toLowerCase() === S.vers); }
+function themeCount(field, name, rows){ return rows.filter(r => r[field].includes(name)).length; }
+function themeRows(field, codes, rows, sort){
+  const out = codes.map(c => ({label:cat[c], antes:0, desp:themeCount(field, cat[c], rows), code:c}));
+  return sort ? out.sort((a,b) => b.desp - a.desp) : out;
+}
+const barr = D.barreras;
+const nBarr = barr.length;
+const sinBarr = barr.filter(r => r.t.includes(cat.B08)).length;
+const repBarr = nBarr - sinBarr;
+
+/* ---------- pestaña 1: resumen ---------- */
+function renderResumen(){
+  const pA = avgOf('Prompts (1-5)','antes'), pD = avgOf('Prompts (1-5)','desp');
+  const eA = avgOf('Preparación E2E (1-5)','antes'), eD = avgOf('Preparación E2E (1-5)','desp');
+  const p45A = topShare('Prompts (1-5)','antes',4), p45D = topShare('Prompts (1-5)','desp',4);
+  const e45A = topShare('Preparación E2E (1-5)','antes',4), e45D = topShare('Preparación E2E (1-5)','desp',4);
+  const clA = topShare('Claridad','antes',4), clD = topShare('Claridad','desp',4);
+  const cA = topConcern('antes'), cD = topConcern('desp');
+  const knowL = ['Falta de conocimientos para usarla','No sé en qué usar la IA'];
+  const kA = sumShare('Preocupaciones', knowL, 'antes'), kD = sumShare('Preocupaciones', knowL, 'desp');
+  const timeD = shareOf('Preocupaciones','Falta de tiempo para experimentar','desp');
+  const paceD = shareOf('Preocupaciones','La IA avanza muy rápido','desp');
+  const resp = nDesp();
+  const tag = S.vers === 'total' ? '' : ' (' + VERS_LABEL[S.vers].replace('Versión','versión') + ')';
+  const concern = c => c.label + ' · ' + pct(c.share) + (c.ties > 1 ? ' (empate con otra opción)' : '');
+
+  const tiles = [
+    tile({color:'var(--m)', label:'Personas inscritas', big:nf(D.personas.unicas),
+      small:D.n.antes + ' registros: ' + D.personas.duplicados + ' personas se inscribieron dos veces. Todas aceptaron que era voluntaria y en tiempo personal.'}),
+    tile({color:'var(--a)', label:'Respondieron la encuesta final' + tag, big:nf(resp),
+      small:pct(resp / D.personas.unicas) + ' de las ' + D.personas.unicas + ' personas inscritas' + (S.vers === 'total' ? ' · versión A: ' + D.n.a + ', versión B: ' + D.n.b : '') + '.'}),
+    tile({color:'var(--o)', label:'Escribir prompts (promedio de 1 a 5)', big:arrowBig(nf(pA,2), nf(pD,2)),
+      small:sgn(pD - pA) + ' puntos · calificación 4 o 5: ' + pct(p45A,0) + ' → ' + pct(p45D,0)}),
+    tile({color:'var(--al)', label:'Preparación para liderar un proyecto E2E de IA (1 a 5)', big:arrowBig(nf(eA,2), nf(eD,2)),
+      small:sgn(eD - eA) + ' puntos · calificación 4 o 5: ' + pct(e45A,0) + ' → ' + pct(e45D,0)}),
+    tile({color:'var(--f)', label:'Claridad de cómo la IA ayuda en el día a día', big:arrowBig(pct(clA,0), pct(clD,0)),
+      small:'Personas que la ven muy clara o bastante clara.'}),
+    tile({color:'var(--c)', label:'Preocupación principal (cada persona elige una)',
+      two:[{tag:'Antes', text:concern(cA)}, {tag:'Después', text:concern(cD)}]})
+  ];
+
+  const read = [
+    'Entre quienes respondieron al final, ' + pct(p45D,0) + ' se califica en 4 o 5 al escribir prompts; en la encuesta inicial era ' + pct(p45A,0) + '.',
+    'Entender cómo usar la IA se volvió claro (muy o bastante claro: ' + pct(clA,0) + ' → ' + pct(clD,0) + '), pero sentirse preparada/o para liderar un proyecto E2E es menos frecuente (4 o 5: ' + pct(e45A,0) + ' → ' + pct(e45D,0) + '): hay una brecha entre entender y liderar.',
+    'No saber cómo usar la IA deja de ser la preocupación principal (' + pct(kA) + ' → ' + pct(kD) + '); hoy pesan más la falta de tiempo (' + pct(timeD) + ') y el ritmo al que avanza la IA (' + pct(paceD) + ').'
+  ];
+
+  const how = [
+    'Antes: ' + D.n.antes + ' registros de ' + D.personas.unicas + ' personas. Después: ' + NB.total + ' respuestas de ' + D.personas.conResp + ' personas, en dos formularios (versión A: ' + D.n.a + ', enviada solo a quienes asistieron a las 4 sesiones; versión B: ' + D.n.b + ').',
+    'No es una comparación pareada: los reportes de Forms solo entregan conteos, así que no se sabe cuánto cambió cada persona. Las diferencias son entre grupos.',
+    'Quienes respondieron al final son una parte voluntaria de las inscritas (' + pct(NB.total / D.personas.unicas,0) + '); es probable que sean quienes más se involucraron.',
+    'La asistencia de la versión B es autorreportada (n = ' + D.n.b + '); la de la versión A la informó la facilitadora. Nadie reportó 0 o 1 sesión: quienes menos asistieron probablemente no respondieron, así que no es una tasa de culminación.',
+    'Como la versión A solo incluye a quienes asistieron a las 4 sesiones, comparar A con B mezcla la asistencia con otras diferencias (cuándo y cómo se respondió). Úsalo como tendencia, no como efecto de asistir.',
+    'Tareas: antes se preguntó para qué usan la IA y después para qué la usarían (intención). Preocupaciones: cada persona eligió solo la principal.'
+  ];
+
+  return h('div', {},
+    h('h2', {text:'Resumen'}),
+    h('p', {class:'lead', text:'Qué dicen las personas que respondieron antes y después de la formación. Después: ' + versTag() + '.'}),
+    h('div', {class:'grid g3'}, tiles),
+    h('h3', {class:'sec', text:'Lectura rápida'}),
+    h('ul', {class:'read', style:{'--bc':'var(--a)'}}, read.map(t => h('li', {text:t}))),
+    h('div', {class:'how', style:{marginTop:'36px'}}, h('h3', {text:'Cómo leer estos datos'}),
+      h('ul', {class:'read', style:{'--bc':'var(--ink2)'}}, how.map(t => h('li', {text:t})))));
+}
+
+/* ---------- pestaña 2: antes vs. después ---------- */
+function scaleChips(name){
+  const a = avgOf(name,'antes'), d = avgOf(name,'desp');
+  return [{name:'Promedio antes', value:nf(a,2)}, {name:'Después', value:nf(d,2)}, {name:'Diferencia', value:sgn(d - a)}];
+}
+function renderCambio(){
+  const mk = (id, title, sub, name, extra) => barCard({
+    id, title, sub, rows:decorated(name, rowsOf(name)), bases:{antes:NB.antes, desp:nDesp()},
+    notes:[baseNote()].concat(extra && extra.notes || []), chips:extra && extra.chips, wide:extra && extra.wide});
+  const rev = name => rowsOf(name).slice().reverse();
+  const cards = [
+    mk('sent','Sentimiento hacia la IA','Una palabra que describa su actitud actual','Sentimiento', {notes:['Nadie eligió preocupada/o, temerosa/o ni escéptica/a, ni antes ni después.']}),
+    mk('nivel','¿En qué nivel se siente?','Autoevaluación de Novato a Sensei','Nivel', {notes:['Los niveles son ordenados, no medidos: úsalos como autopercepción.']}),
+    barCard({id:'prom', title:'Escribir prompts efectivos', sub:'Autoevaluación de 1 a 5', rows:decorated('Prompts (1-5)', rev('Prompts (1-5)')), bases:{antes:NB.antes, desp:nDesp()}, chips:scaleChips('Prompts (1-5)'), notes:[baseNote()]}),
+    barCard({id:'e2e', title:'Preparación para diseñar y liderar un proyecto E2E de IA', sub:'De 1 (nada preparada/o) a 5 (totalmente preparada/o)', rows:decorated('Preparación E2E (1-5)', rev('Preparación E2E (1-5)')), bases:{antes:NB.antes, desp:nDesp()}, chips:scaleChips('Preparación E2E (1-5)'), notes:[baseNote()]}),
+    mk('clar','Claridad de cómo la IA ayuda en el día a día','Muy claro a nada claro','Claridad', {notes:['Nadie respondió poco claro o nada claro, antes ni después.']}),
+    mk('tareas','Tareas para las que se usa (antes) o se usaría (después) la IA','Selección múltiple: hasta 2 opciones por persona','Tareas IA', {notes:['Antes es uso actual; después es intención de uso. Los porcentajes suman más de 100%.']}),
+    mk('preoc','Preocupación principal sobre el uso de la IA','Cada persona elige una sola opción','Preocupaciones', {wide:true, notes:['Mide la preocupación principal, no su intensidad ni todas las que tiene una persona.']})
+  ];
+  return h('div', {},
+    h('h2', {text:'Antes vs. después'}),
+    h('p', {class:'lead', text:'Cada gráfico compara a quienes respondieron la encuesta inicial (n = ' + NB.antes + ') con quienes respondieron la final (n = ' + nDesp() + ', ' + versTag().split(',')[0] + '). Pasa el cursor sobre una fila para ver el detalle.'}),
+    h('div', {class:'grid g2'}, cards));
+}
+
+/* ---------- pestaña 3: asistencia y barreras ---------- */
+function renderAsistencia(){
+  const nB = D.n.b;                         // las barreras y grabaciones solo existen en la versión B
+  const nA = nDesp();                       // la asistencia sigue el selector
+  const cnt = o => S.vers === 'total' ? o.a + o.b : o[S.vers];
+  const asis = D.asistencia.map(o => ({...o, n:cnt(o)}));
+  const avg = asis.filter(o => o.v != null).reduce((s,o) => s + o.v * o.n, 0) / nA;
+  const full = asis.find(o => o.v === 4).n;
+  const three = asis.filter(o => o.v != null && o.v >= 3).reduce((s,o) => s + o.n, 0);
+  const fullAll = D.asistencia.find(o => o.v === 4);   // 4 sesiones, versión A + versión B
+
+  const tiles = [
+    tile({color:'var(--m)', label:'Asistieron a las 4 sesiones', big:nf(full), small:pct(full/nA) + ' de las ' + nA + ' personas que respondieron' + (S.vers === 'total' ? ' · al menos ' + pct((fullAll.a + fullAll.b) / D.personas.unicas) + ' de las ' + D.personas.unicas + ' inscritas' : '')}),
+    tile({color:'var(--a)', label:'Asistieron a 3 o más sesiones', big:nf(three), small:pct(three/nA) + ' de las ' + nA + ' personas'}),
+    tile({color:'var(--o)', label:'Promedio de sesiones por persona', big:nf(avg,2), small:'de 4 sesiones posibles'}),
+    tile({color:'var(--al)', label:'Mencionaron alguna barrera (versión B)', big:nf(repBarr), small:'de ' + nBarr + ' que respondieron esa pregunta; ' + sinBarr + ' dijeron que asistieron a todas'})
+  ];
+
+  const asisRows = asis.map(o => ({label:o.o, antes:0, desp:o.n, hint:''}));
+  const asisCard = barCard({id:'asis', title:'¿A cuántas sesiones pudo asistir?', sub:'Después: ' + versTag() + '. Versión B: pregunta 1 del formulario; versión A: dato informado por la facilitadora', rows:asisRows, bases:{desp:nA}, series:['desp'], word:'personas',
+    notes:['Nadie reportó asistir a 1 o ninguna sesión: quienes menos asistieron probablemente no respondieron.',
+      'La versión A se envió solo a quienes asistieron a las 4 sesiones; ese dato lo informó la facilitadora. En la versión B es autorreportado.',
+      'Solo cubre a quienes respondieron: ' + (fullAll.a + fullAll.b) + ' personas asistieron a las 4 sesiones (' + fullAll.a + ' de la versión A y ' + fullAll.b + ' de la B), al menos ' + pct((fullAll.a + fullAll.b) / D.personas.unicas) + ' de las ' + D.personas.unicas + ' inscritas. Es un piso, no una tasa de culminación.']});
+
+  const bCodes = ['B01','B02','B03','B04','B05','B06','B07'];
+  const bRows = bCodes.map(c => ({label:cat[c], antes:0, desp:barr.filter(r => r.t.includes(cat[c])).length})).sort((a,b) => b.desp - a.desp);
+  const barCardEl = barCard({id:'barr', title:'¿Qué dificultó asistir a todas las sesiones?', sub:'Solo versión B · temas en respuestas abiertas, base: ' + repBarr + ' personas que mencionaron una barrera', rows:bRows, bases:{desp:repBarr}, series:['desp'], word:'personas', wide:false,
+    notes:['Una persona puede mencionar varios temas: los porcentajes no suman 100%.', 'La versión A no hizo esta pregunta, así que el selector no cambia este gráfico.']});
+
+  const sRows = [1,2,3,4].map(s => ({label:'Sesión ' + s, antes:0, desp:barr.filter(r => r.s.includes(s)).length}));
+  const sesCard = barCard({id:'ses', title:'Sesión que se menciona como no asistida', sub:'Solo versión B · base: ' + repBarr + ' personas que mencionaron una barrera', rows:sRows, bases:{desp:repBarr}, series:['desp'], word:'personas',
+    notes:['Solo cuenta a quienes nombraron la sesión; "la última" se leyó como la sesión 4. Muchas respuestas no la precisan.']});
+
+  const rv = barr.filter(r => r.rv).length, rf = barr.filter(r => r.rf).length;
+  const recTiles = h('div', {class:'grid g2'}, [
+    tile({color:'var(--f)', label:'Dicen haber visto las grabaciones', big:nf(rv), small:'de ' + nB + ' personas de la versión B, en sus comentarios'}),
+    tile({color:'var(--c)', label:'Reclaman no haber tenido grabación', big:nf(rf), small:'una menciona que la primera sesión no se grabó. La convocatoria decía que no se grabarían.'})
+  ]);
+  const recCard = h('article', {class:'card'},
+    h('header', {}, h('div', {}, h('h3', {text:'Grabaciones'}), h('p', {class:'sub', text:'Solo versión B · según los comentarios abiertos'}))),
+    recTiles);
+
+  return h('div', {},
+    h('h2', {text:'Asistencia y barreras'}),
+    h('p', {class:'banner', text:'La asistencia sigue el selector "Después" (' + versTag() + '). Las barreras, las sesiones perdidas y las grabaciones solo existen en la versión B (n = ' + nB + '), porque la versión A no hizo esas preguntas.'}),
+    h('div', {class:'grid g4'}, tiles),
+    h('div', {class:'grid g2', style:{marginTop:'16px'}}, [asisCard, barCardEl, sesCard, recCard]));
+}
+
+/* ---------- pestaña 4: perfil y cobertura ---------- */
+function covExtra(r){
+  if (r.antes === 0) return r.desp > 0 ? {extra:'!', flag:true, extraTitle:'Hay respuestas finales pero ninguna inicial'} : {extra:'—'};
+  const c = r.desp / r.antes;
+  return c > 1 ? {extra:pct(c,0) + ' !', flag:true, extraTitle:'Más respuestas finales que iniciales: el equipo autorreportado no coincide entre encuestas'} : {extra:pct(c,0)};
+}
+function renderPerfil(){
+  const teams = rowsOf('Equipo');
+  const fams = [];
+  teams.forEach(t => { let f = fams.find(x => x.label === t.grp); if (!f){ f = {label:t.grp, antes:0, desp:0}; fams.push(f); } f.antes += t.antes; f.desp += t.desp; });
+  const roles = rowsOf('Rol');
+  const bases = {antes:NB.antes, desp:nDesp()};
+  const common = ['Antes cuenta registros (incluye ' + D.personas.duplicados + ' repetidos), no personas únicas.', 'Cobertura = respuestas finales ÷ respuestas iniciales del mismo grupo.'];
+
+  const famCard = barCard({id:'fam', title:'Por familia de equipo', sub:'Cuántas respuestas hubo y qué parte respondió al final', rows:fams.map(f => ({...f, ...covExtra(f)})), bases, extraHead:'Cobertura', tableLabel:'Familia', notes:common});
+  const rolCard = barCard({id:'rol', title:'Por rol', sub:'Rol declarado en cada encuesta', rows:roles.map(r => ({...r, ...covExtra(r)})), bases, extraHead:'Cobertura', tableLabel:'Rol', notes:common});
+
+  const teamRows = [];
+  let last = null;
+  teams.forEach(t => {
+    if (t.grp !== last){ teamRows.push({header:t.grp}); last = t.grp; }
+    teamRows.push({...t, ...covExtra(t)});
+  });
+  const flagged = teams.filter(t => t.desp > t.antes);
+  const teamNotes = common.concat(flagged.length ? ['Revisar: ' + flagged.map(t => t.label + ' (' + t.desp + ' finales vs. ' + t.antes + ' iniciales)').join('; ') + '. El equipo autorreportado no coincide entre encuestas.'] : [])
+    .concat(['Se muestran los 17 equipos, incluidos los que no tienen respuestas. Aquí se cuenta participación, no opiniones.']);
+  const teamCard = barCard({id:'teams', title:'Por equipo', sub:'Los 17 equipos, agrupados por familia', rows:teamRows, bases, extraHead:'Cobertura', tableLabel:'Equipo', wide:true, notes:teamNotes});
+
+  return h('div', {},
+    h('h2', {text:'Perfil y cobertura'}),
+    h('p', {class:'lead', text:'Quiénes se inscribieron y qué parte de cada grupo respondió la encuesta final (' + versTag() + '). Con grupos pequeños conviene mirar el número de personas, no solo el porcentaje.'}),
+    h('div', {class:'grid g2'}, [famCard, rolCard, teamCard]));
+}
+
+/* ---------- pestaña 5: voz y próximos pasos ---------- */
+function renderVoz(){
+  const fb = fbRows();
+  const nFb = fb.length;
+  const expCodes = Object.keys(cat).filter(c => c.startsWith('EX'));
+  const expRows = expCodes.map(c => ({label:cat[c], antes:D.expectativas.filter(r => r.includes(cat[c])).length, desp:0})).sort((a,b) => b.antes - a.antes);
+  const expCard = barCard({id:'exp', title:'Qué esperaban al inscribirse', sub:'Temas en la pregunta abierta de la encuesta inicial · base: ' + D.expectativas.length + ' respuestas', rows:expRows, bases:{antes:D.expectativas.length}, series:['antes'], names:{antes:'Antes'}, word:'respuestas',
+    notes:['Una respuesta puede tener varios temas. Los temas se asignaron por lectura manual.']});
+  const gCodes = Object.keys(cat).filter(c => c.startsWith('L'));
+  const gusCard = barCard({id:'gus', title:'Lo que más gustó', sub:'Temas en comentarios finales · ' + versTag() + ' · base: ' + nFb, rows:themeRows('g', gCodes, fb, true), bases:{desp:nFb}, series:['desp'], word:'respuestas',
+    notes:['Una respuesta puede tener varios temas.']});
+  const mCodes = Object.keys(cat).filter(c => c.startsWith('M') && c !== 'M00');
+  const sinNeg = fb.filter(r => r.m.includes(cat.M00)).length;
+  const mejCard = barCard({id:'mej', title:'Lo que menos gustó o proponen mejorar', sub:'Temas en comentarios finales · ' + versTag() + ' · base: ' + nFb, rows:themeRows('m', mCodes, fb, true), bases:{desp:nFb}, series:['desp'], word:'respuestas',
+    notes:[sinNeg + ' de ' + nFb + ' comentarios no traen queja ni sugerencia. Una respuesta puede tener varios temas.']});
+
+  const quotes = D.quotes.map(q => h('blockquote', {class:'quote', style:{'--qc': q.kind === 'gusto' ? 'var(--f)' : 'var(--c)'}},
+    h('p', {text:'“' + q.text + '”'}),
+    h('div', {class:'meta'}, h('span', {text:'Encuesta final · versión ' + q.ver}), q.tags.map(t => h('span', {class:'tag', text:t})))));
+
+  // brechas
+  const gap = [
+    {label:'Claridad de uso: muy o bastante clara', antes:topShare('Claridad','antes',4), desp:topShare('Claridad','desp',4)},
+    {label:'Escribir prompts: calificación 4 o 5', antes:topShare('Prompts (1-5)','antes',4), desp:topShare('Prompts (1-5)','desp',4)},
+    {label:'Nivel Estratega o superior', antes:topShare('Nivel','antes',3), desp:topShare('Nivel','desp',3)},
+    {label:'Preparación para liderar un proyecto E2E: 4 o 5', antes:topShare('Preparación E2E (1-5)','antes',4), desp:topShare('Preparación E2E (1-5)','desp',4)}
+  ];
+  const gapCard = barCard({id:'gap', title:'Dónde se queda la distancia', sub:'Porcentaje de personas en el tramo alto de cada medida', rows:gap, bases:{antes:NB.antes, desp:nDesp()}, fractions:true, word:'personas',
+    notes:[baseNote(), 'Esta gráfica siempre muestra porcentajes, sin importar la unidad elegida arriba.']});
+
+  // próximos pasos (usan el total de respuestas)
+  const all = D.feedback;
+  const hor = all.filter(r => fbMatch(r, 'm', [cat.M01, cat.M02])).length;
+  const bH = barr.filter(r => r.t.includes(cat.B04)).length;
+  const m06 = all.filter(r => r.m.includes(cat.M06)).length, m03 = all.filter(r => r.m.includes(cat.M03)).length;
+  const recV = barr.filter(r => r.rv).length, recF = barr.filter(r => r.rf).length;
+  const T = k => { const a = D.dims.Preocupaciones.find(o => o.o === k); return (a.a + a.b) / NB.total; };
+  const cl = topShareTotal('Claridad',4), e2 = topShareTotal('Preparación E2E (1-5)',4);
+  const sinResp = D.personas.unicas - D.personas.conResp;
+  const steps = [
+    {c:'var(--m)', t:'Llevar el espacio a la jornada laboral', d:hor + ' de ' + all.length + ' comentarios mencionan el horario o piden que sea en jornada laboral; ' + bH + ' de ' + repBarr + ' personas con barreras señalan el día o la hora.', p:'Probar una franja dentro de la jornada o con tiempo reconocido y evaluar convertirla en formación oficial.'},
+    {c:'var(--a)', t:'Grabar y compartir todas las sesiones', d:recV + ' personas dicen haber visto las grabaciones y ' + recF + ' reclaman no haber tenido acceso (una menciona que la primera sesión no se grabó). La convocatoria decía que no se grabarían.', p:'Grabar todas las sesiones, avisarlo desde la convocatoria y compartir los materiales.'},
+    {c:'var(--o)', t:'Más práctica aplicada y continuidad', d:m06 + ' comentarios piden práctica con proyectos reales, acciones específicas o más profundidad, y ' + m03 + ' piden más sesiones o continuidad.', p:'Ofrecer talleres de práctica con casos del banco y retos periódicos; una persona propone un grupo de retos semanales por nivel.'},
+    {c:'var(--al)', t:'De entender a liderar', d:'La claridad de uso llega a ' + pct(cl,0) + ' (muy o bastante clara), pero solo ' + pct(e2,0) + ' se califica en 4 o 5 para liderar un proyecto E2E.', p:'Acompañar un proyecto E2E real con mentoría y separar rutas por nivel de partida.'},
+    {c:'var(--f)', t:'Tiempo, ritmo de la IA y verificación', d:'Hoy pesan más la falta de tiempo para experimentar (' + pct(T('Falta de tiempo para experimentar'),0) + ') y el ritmo de la IA (' + pct(T('La IA avanza muy rápido'),0) + '); la preocupación por errores al confiar en los resultados es ' + pct(T('Errores por confiar en los resultados'),0) + '.', p:'Proteger tiempo para practicar, compartir un resumen periódico de novedades y reforzar buenas prácticas de verificación.'},
+    {c:'var(--c)', t:'Medir el cambio persona a persona', d:'Hay ' + sinResp + ' personas inscritas sin respuesta final. De las ' + D.personas.conResp + ' que respondieron, ' + (D.asistencia.find(o => o.v === 4).a + D.asistencia.find(o => o.v === 4).b) + ' asistieron a las 4 sesiones, pero no se conoce la asistencia de quienes no respondieron.', p:'Exportar las respuestas de Forms con el usuario, cruzarlas con la lista real de asistencia y calcular quién avanzó y cuánto.'}
+  ].map((s,i) => h('article', {class:'step', style:{'--sc':s.c}},
+    h('h4', {}, h('span', {class:'n', text:String(i+1)}), s.t),
+    h('p', {}, h('b', {text:'Qué muestran los datos: '}), s.d),
+    h('p', {}, h('b', {text:'Propuesta: '}), s.p)));
+
+  return h('div', {},
+    h('h2', {text:'Voz y próximos pasos'}),
+    h('p', {class:'lead', text:'Lo que esperaban, lo que valoraron y lo que proponen cambiar, con comentarios literales sin nombres.'}),
+    h('div', {class:'grid g2'}, [expCard, gusCard, mejCard]),
+    h('h3', {class:'sec', text:'En sus palabras'}),
+    h('p', {class:'secsub', text:'Cuatro comentarios sobre lo que valoraron (borde rosa) y cuatro sobre lo que proponen cambiar (borde azul). Son extractos literales de la encuesta final; los puntos suspensivos marcan recortes.'}),
+    h('div', {class:'grid g2'}, quotes),
+    h('h3', {class:'sec', text:'Brechas'}),
+    h('p', {class:'secsub', text:'Aprender a usar la IA y sentirse capaz de liderar un proyecto completo no avanzan al mismo ritmo.'}),
+    h('div', {class:'grid g2'}, [gapCard]),
+    h('h3', {class:'sec', text:'Próximos pasos'}),
+    h('p', {class:'secsub', text:'Propuestas del análisis a partir de estos datos, no resultados de la encuesta. Usan el total de las respuestas finales, sin importar el selector.'}),
+    h('div', {class:'grid g2'}, steps));
+}
+function topShareTotal(name, thr){
+  let t = 0, n = 0;
+  D.dims[name].forEach(o => { const c = o.a + o.b; n += c; if (o.v != null && o.v >= thr) t += c; });
+  return t / n;
+}
+
+/* ---------- estructura general ---------- */
+const RENDER = {resumen:renderResumen, cambio:renderCambio, asistencia:renderAsistencia, perfil:renderPerfil, voz:renderVoz};
+
+function buildChrome(){
+  const tabs = document.getElementById('tabs');
+  tabs.replaceChildren(...TABS.map((t, i) => h('button', {class:'tab', role:'tab', id:'tab-' + t.id, 'aria-controls':'panel-' + t.id, style:{'--tc':t.color},
+    onclick:() => setTab(t.id)}, h('span', {class:'dot', 'aria-hidden':'true'}), t.label)));
+  const seg = (items, get, set, label) => h('div', {class:'seg', role:'group', 'aria-label':label},
+    items.map(it => h('button', {type:'button', 'aria-pressed':String(get() === it.id), text:it.label, onclick:() => set(it.id)})));
+  const c = document.getElementById('controls');
+  c.replaceChildren(
+    h('div', {class:'ctl'}, 'Mostrar', seg([{id:'pct', label:'% de personas'}, {id:'n', label:'Número de personas'}], () => S.unit, v => { S.unit = v; render(); }, 'Unidad')),
+    h('div', {class:'ctl', id:'ctl-vers'}, 'Después',
+      seg([{id:'total', label:'Total · ' + NB.total}, {id:'a', label:'Versión A · ' + NB.a}, {id:'b', label:'Versión B · ' + NB.b}], () => S.vers, v => { S.vers = v; render(); }, 'Versión de la encuesta final')),
+    h('div', {class:'ctl'}, h('button', {type:'button', class:'pbtn', 'aria-pressed':String(S.proj), onclick:() => { S.proj = !S.proj; render(); }}, 'Modo proyección')));
+}
+
+function setTab(id){
+  S.tab = id;
+  history.replaceState(null, '', '#' + id);
+  render();
+  window.scrollTo({top:0});
+}
+
+function render(){
+  document.documentElement.classList.toggle('proj', S.proj);
+  buildChrome();
+  TABS.forEach(t => {
+    const b = document.getElementById('tab-' + t.id);
+    b.setAttribute('aria-selected', String(t.id === S.tab));
+    b.tabIndex = t.id === S.tab ? 0 : -1;
+  });
+  const frag = document.createDocumentFragment();
+  TABS.forEach(t => {
+    frag.append(h('section', {class:'panel' + (t.id === S.tab ? ' on' : ''), id:'panel-' + t.id, role:'tabpanel', 'aria-labelledby':'tab-' + t.id}, RENDER[t.id]()));
+  });
+  document.getElementById('panels').replaceChildren(frag);
+  document.getElementById('printstate').textContent = 'Vista impresa · ' + (S.unit === 'pct' ? 'porcentajes' : 'número de personas') + ' · Después: ' + versTag();
+  hideTip();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const i = TABS.findIndex(t => t.id === S.tab);
+  if (e.key === 'ArrowRight' && !(e.target.closest && e.target.closest('.seg'))) setTab(TABS[(i + 1) % TABS.length].id);
+  else if (e.key === 'ArrowLeft' && !(e.target.closest && e.target.closest('.seg'))) setTab(TABS[(i + TABS.length - 1) % TABS.length].id);
+  else if (/^[1-5]$/.test(e.key)) setTab(TABS[Number(e.key) - 1].id);
+  else if (e.key.toLowerCase() === 'p'){ S.proj = !S.proj; render(); }
+});
+
+const initial = location.hash.replace('#','');
+if (TABS.some(t => t.id === initial)) S.tab = initial;
+render();
+</script>
+</body>
+</html>
